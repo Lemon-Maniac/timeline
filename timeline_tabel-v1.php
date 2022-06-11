@@ -24,11 +24,26 @@
 <body>
 <center><h1>Test tanggal kadaluarsa</h1></center>
   <table width="100%" cellspacing="0" border="1" align="center">
+
+  <center>
+    <?php
+        date_default_timezone_set("Asia/Jakarta");
+
+        $today_day  = date('Y/m/d');
+        $today_jam  = date('H/i/s');
+
+        echo($today_day);
+        echo(" ");
+        echo($today_jam);
+    ?>
+  </center>
+  
     <thead>
       <th>ID</th>
       <th>comment</th>
       <th>tanggal</th>
-      <th>jam</th>
+      <th>start</th>
+      <th>end</th>
       <th>pembuatan</th>
       <th>masa berlaku</th>
     </thead>
@@ -52,25 +67,43 @@
                     <td><?php echo $row['id']; ?></td>
                     <td><?php echo $row['comment']; ?></td>
                     <td><?php echo $row['tanggal']; ?></td>
-                    <td><?php echo $row['jam']; ?></td>
+                    <td><?php echo $row['start']; ?></td>
+                    <td><?php echo $row['end']; ?></td>
                     <td><?php echo $row['buat']; ?></td>
                     <td>
 
                         <?php
+                            //default time zone
+                            date_default_timezone_set("Asia/Jakarta");
+
                             // test tentang expired date
-                            $exp_date = $row['tanggal'];
-                            $today    = date('Y/m/d');
+                            $exp_date   = $row['tanggal'];
+                            $exp_start    = $row['start'];
+                            $exp_end    = $row['end'];
+                            $today_day  = date('Y/m/d');
+                            $today_jam  = date('H/i/s');
 
                             //lalu convert data diatas ke strtotime
-                            $exp = strtotime($exp_date);
-                            $td  = strtotime($today);
+                            $exp_d = strtotime($exp_date);
+                            // $exp_j = strtotime($exp_jam);
+                            $td  = strtotime($today_day);
+                            // $tj  = strtotime($today_jam);
 
-                            if($td > $exp){
-                                echo "expired";
-                            }
-                            else{
-                                echo "masih";
-                            }
+                           if($td >= $exp_d)
+                           {
+                              if($today_jam > $exp_end){
+                                echo "expired";  
+                              }
+                              elseif($today_jam >= $exp_start and $today_jam <= $exp_end){
+                                echo "ongoing";
+                              }
+                              else{
+                                echo "today";
+                              }
+                           }
+                           else{
+                            echo " coming soon";
+                           }
                         ?>
 
 
@@ -84,7 +117,8 @@
       <th>ID</th>
       <th>comment</th>
       <th>tanggal</th>
-      <th>jam</th>
+      <th>start</th>
+      <th>end</th>
       <th>pembuatan</th>
       <th>masa berlaku</th>
     </tfoot>
